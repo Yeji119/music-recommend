@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>추천 락 음악</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>무드에 맞는 락 음악 추천받기</h1>
+    
+    <div class="image-box">
+      <img src="MusicIsMyLife.jpg" alt="Jazz is my life" />
+      <img src="RockForYourSoul.jpeg" alt="Rock for your soul" />
+    </div>
+
+    <form id="music-form">
+      <label for="mood">오늘의 기분이나 듣고 싶은 곡의 분위기를 입력하세요</label>
+      <input 
+        type="text" 
+        id="mood" 
+        name="mood" 
+        required 
+        placeholder="예: 시끄러운, 우울한, 휴식이 필요할 때 등"
+      />
+      <button type="submit">노래 추천받기</button>
+    </form>
+
+    <div id="resultDiv" class="result-box"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("music-form");
+    const resultDiv = document.getElementById("resultDiv");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const mood = document.getElementById("mood").value;
+      resultDiv.textContent = "노래를 추천받는 중입니다...";
+
+      try {
+        const response = await fetch("https://assign2-phi.vercel.app/api/duksungAI", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ mood }),
+        });
+
+        const data = await response.json();
+        resultDiv.textContent = data.answer;
+      } catch (error) {
+        resultDiv.textContent = "추천을 가져오는 데 실패했습니다.";
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>
